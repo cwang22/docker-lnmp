@@ -1,0 +1,31 @@
+version: "3"
+services:
+    
+    nginx:
+        image: nginx:latest
+        ports:
+            - '8080:80'
+        volumes:
+            - ./nginx:/etc/nginx/conf.d
+            - ./logs/nginx:/var/logs/nginx
+            - ./apps:/var/www/html
+        depends_on:
+            - php
+        restart: always
+        
+    php:
+        build: ./php
+        volumes:
+            - ./apps:/var/www/html
+        restart: always
+        depends_on:
+            - mysql
+    mysql:
+        image: mariadb
+        ports:
+            - '33060:3306'
+        volumes:
+            - ./db:/var/lib/mysql
+        environment:
+            - MYSQL_ROOT_PASSWORD=root
+        restart: always
