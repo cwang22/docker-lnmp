@@ -1,12 +1,13 @@
-version: "3"
+version: "3.7"
 services:
     
     nginx:
         image: nginx:latest
         ports:
-            - '8080:80'
+            - '80:80'
+            - '443:443'
         volumes:
-            - ./nginx:/etc/nginx/conf.d
+            - ./conf/nginx:/etc/nginx/conf.d
             - ./logs/nginx:/var/logs/nginx
             - ./apps:/var/www/html
         depends_on:
@@ -20,12 +21,13 @@ services:
         restart: always
         depends_on:
             - mysql
+
     mysql:
         image: mariadb
         ports:
-            - '33060:3306'
+            - '3306:3306'
         volumes:
-            - ./db:/var/lib/mysql
+            - ./dbdata:/var/lib/mysql
         environment:
-            - MYSQL_ROOT_PASSWORD=root
+            - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
         restart: always
